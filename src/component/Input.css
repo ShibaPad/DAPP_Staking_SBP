@@ -1,0 +1,38 @@
+.input-box {
+  display: flex;
+  background: #fff;
+  border: 1px solid #a0a0a0;
+  border-radius: 4px;
+  overflow: hidden;
+  font-family: Teko;
+}
+
+.input-box .prefix {
+  padding: 0 1rem 0 0.5rem;
+  margin: auto 0 auto 1rem;
+  font-weight: 300;
+  font-size: 1.2rem;
+  color: #999;
+  margin: auto;
+}
+.input-box .suffix {
+  font-weight: 300;
+  font-size: 1.3rem;
+  color: #999;
+  padding-right: 1rem;
+  margin: auto;
+}
+.input-box input {
+  font-size: 1rem;
+  font-weight: 300;
+  background: #fff;
+  border: none;
+  outline: none;
+  min-width: 5rem;
+  color: #999;
+  /* padding: 0.5rem; */
+}
+
+.input-box:focus-within {
+  border-color: #777;
+}
