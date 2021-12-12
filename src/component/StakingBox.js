@@ -90,7 +90,7 @@ const StakingBox = () => {
             <Text color="#f6c179">{Store.stakingInfo.TVL/10**18} SBP</Text>
           </Row>
           <Row>
-            <Text color="#ffffff">Release Date : </Text>
+            <Text color="#ffffff">Locked Period : </Text>
           </Row>
           <SelectBoxWrapper>
             {Store.stakingPool &&
@@ -161,11 +161,8 @@ const StakingBox = () => {
           <Input
             style={{ marginTop: '1rem' }}
             onChange={handleAmount}
-            value={stakingAmount}
+            value={stakingAmount/10**18}
           />
-          <Text color="#f6c179" width="36rem">
-          Staking entrance fee : 16% / This will be compensated at the claim
-          </Text>
           <FlexDiv>
             <StakeButton onClick={handleStake} disabled={disable}>
               {stakeable(Store.stakingInfo.allowance, stakingAmount)
