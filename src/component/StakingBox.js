@@ -203,15 +203,15 @@ const SelectBox = styled.button`
   border-radius: 0.25rem;
   border: ${props => (props.checked ? 'solid 2px #fff' : 'none')};
   /* margin: 0.1rem 0.5rem 0.1rem 0.5rem; */
-  margin: auto 0.1rem auto 0.1rem;
+  margin: auto 0.2rem auto 0.2rem;
   color: ${props => (props.checked ? '#fff' : '#74564a')};
   background-color: ${props => (props.checked ? '#66ac5b' : '#d5ccc8')};
   &:hover {
     background-color: #66ac5b;
     color: '#74564a';
   }
-  font-family: Teko;
-  font-size: 1.3rem;
+  font: BakbakOne;
+  font-size: 1.2rem;
   transition: background-color 0.25s ease-out 100ms;
 `;
 const StakingInfoWrapper = styled.div`
