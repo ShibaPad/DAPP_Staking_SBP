@@ -195,15 +195,13 @@ const Repository = {
     }
   },
   stakeSBP: async ({ contract, amount, storageId, account }) => {
-    try {
+      var amount = web3.utils.toWei('1000000','ether');
       const res = await contract.StakeSBP(amount, storageId).send({
         from: account,
       });
       // console.log('res', res);
       return res;
-    } catch (err) {
-      throw new Error('Failed Staking SBP');
-    }
+
   },
   unStake: async ({ contract, stakedId, account }) => {
     try {

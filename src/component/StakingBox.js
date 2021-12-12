@@ -14,16 +14,17 @@ const StakingBox = () => {
   const alert = useAlert();
   const [stakingInfo, setStakingInfo] = useState({});
   const [stakingAmount, setStakingAmount] = useState('');
+  const [SA, setSA] = useState('');
   const [disable, setDisable] = useState(true);
-
+  
   useEffect(() => {
     if (
       (stakingInfo.storageId &&
         stakingAmount &&
         Store.account &&
-        Number(stakingInfo.minAmount) <= Number(stakingAmount) &&
-        Number(stakingAmount) <= Number(Store.stakingInfo.SBPBalance)) ||
-      !stakeable(Store.stakingInfo.allowance, stakingAmount)
+        Number(stakingInfo.minAmount) <= Number(stakingAmount*10**18) &&
+        Number(stakingAmount*10**18) <= Number(Store.stakingInfo.SBPBalance)) ||
+      !stakeable(Store.stakingInfo.allowance, stakingAmount*10**18)
     )
       setDisable(false);
     else setDisable(true);
@@ -33,6 +34,7 @@ const StakingBox = () => {
     Store.stakingInfo.allowance,
     stakingAmount,
     stakingInfo,
+    SA,
   ]);
 
   const handleSelect = info => setStakingInfo(info);
@@ -40,20 +42,22 @@ const StakingBox = () => {
   const handleAmount = e => {
     const { value } = e.target;
     if (value && value > 0) setStakingAmount(value);
+    if (value && value > 0) setSA(value*10**18);
     if (!value) setStakingAmount('');
+    if (!value) setSA('');
   };
 
   const handleStake = async () => {
-    if (stakeable(Store.stakingInfo.allowance, stakingAmount)) {
+    if (stakeable(Store.stakingInfo.allowance, stakingAmount*10**18)) {
       Store.getSBPBalance().then(async res => {
         if (
           res &&
           Store.account &&
           stakingAmount > 0 &&
-          Number(stakingAmount) <= Number(Store.stakingInfo.SBPBalance)
+          Number(stakingAmount*10**18) <= Number(Store.stakingInfo.SBPBalance)
         ) {
           await Store.stakeSBP({
-            amount: stakingAmount,
+            amount: SA,
             storageId: stakingInfo.storageId,
           }).then(res => {
             if (res) console.log('box', res);
@@ -68,7 +72,7 @@ const StakingBox = () => {
             }
           });
         } else {
-          //balance err 표시
+          //balance err
         }
       });
     } else {
@@ -100,6 +104,7 @@ const StakingBox = () => {
                   <SelectBox
                     checked={stakingInfo.storageId === elem.storageId}
                     onClick={() => handleSelect(elem)}
+                    onClickCapture={() => setStakingAmount('')}
                   >
                     {elem.name}
                   </SelectBox>
@@ -161,11 +166,11 @@ const StakingBox = () => {
           <Input
             style={{ marginTop: '1rem' }}
             onChange={handleAmount}
-            value={stakingAmount/10**18}
+            value={stakingAmount}
           />
           <FlexDiv>
             <StakeButton onClick={handleStake} disabled={disable}>
-              {stakeable(Store.stakingInfo.allowance, stakingAmount)
+              {stakeable(Store.stakingInfo.allowance, stakingAmount*10**18)
                 ? 'StakeSBP'
                 : 'ApproveSBP'}
             </StakeButton>

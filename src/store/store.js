@@ -1,5 +1,6 @@
 import { observable } from 'mobx';
 import Repository from './repository';
+
 const { ethereum } = window;
 const Store = observable({
   account: null,
@@ -224,17 +225,14 @@ const Store = observable({
     }
   },
   async stakeSBP({ amount, storageId }) {
-    try {
       await Repository.stakeSBP({
         contract: this.stakingContract.methods,
-        amount: amount,
+        amounts: amount,
         storageId: storageId,
         account: this.account,
       });
       return { result: true, msg: 'Succeed Staking SBP' };
-    } catch (err) {
-      return { result: false, msg: 'Failed Staking SBP' };
-    }
+
   },
   async unStakeSBP(stakedId) {
     try {

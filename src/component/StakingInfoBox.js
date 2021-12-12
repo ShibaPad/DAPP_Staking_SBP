@@ -33,7 +33,7 @@ const StakingInfoBox = ({ stakingInfo, handleClaim }) => {
     Store.getStakeStatus(stakingId).then(res => {
       if (res) {
         if (res[2]) {
-          // 미 도래 시점, emergency
+          // emergency
           setDisable(true);
         } else {
           setDisable(false);

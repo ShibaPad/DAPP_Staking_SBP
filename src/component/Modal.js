@@ -38,7 +38,7 @@ const CustomModal = ({ visible, onRequestClose, type, stakingId }) => {
       <TextWrapper>
         {type === 'claim'
           ? 'Do you want to claim?'
-          : `You can't earn any reward & will lose tokens from entrance fees by Emergency claim`}
+          : `You can't earn any reward & will lose ${Store.paneltyFee}% of tokens from entrance fees by Emergency claim`}
       </TextWrapper>
       <ButtonWrapper>
         <Button onClick={handleClaim}>
