@@ -1,17 +1,26 @@
 import Web3 from 'web3';
 import Web3EthContract from 'web3-eth-contract';
-const { ethereum } = window;
+import Web3Modal from 'web3modal';
+import WalletConnectProvider from '@walletconnect/web3-provider';
+const providerOptions = {
+  walletconnect: {
+    package: WalletConnectProvider,
 
-const metamaskIsInstalled = ethereum && ethereum.isMetaMask;
+    options: {
+      // Mikko's test key - don't copy as your mileage may vary
+      // infuraId: '8043bb2cf99347b1bfadfb233c5325c0',
+      // rpc: {
+      //   56: 'https://bsc-dataseed.binance.org/',
+      // },
+    },
+  },
+};
+let provider;
 let web3;
 let abi_SBP;
 let abi_staking;
 let CONFIG_SBP;
 let CONFIG_staking;
-if (metamaskIsInstalled) {
-  Web3EthContract.setProvider(ethereum);
-  web3 = new Web3(ethereum);
-}
 
 const Repository = {
   fetchContract: async () => {
@@ -47,6 +56,20 @@ const Repository = {
     }).then(res => {
       return res.json();
     });
+    let web3Modal = new Web3Modal({
+      cacheProvider: false, // optional
+      providerOptions, // required
+      // disableInjectedProvider: true, // optional. For MetaMask / Brave / Opera.
+    });
+    try {
+      provider = await web3Modal.connect();
+    } catch (e) {
+      console.log('Could not get a wallet connection', e);
+      return;
+    }
+    web3 = new Web3(provider);
+
+    Web3EthContract.setProvider(provider);
     const smartContractObj_SBP = new Web3EthContract(
       abi_SBP,
       CONFIG_SBP.CONTRACT_ADDRESS,
@@ -58,31 +81,25 @@ const Repository = {
     return {
       smartContract_SBP: smartContractObj_SBP,
       smartContract_staking: smartContractObj_staking,
-      web3: web3,
     };
   },
 
   walletConnect: async () => {
-    if (metamaskIsInstalled) {
-      try {
-        const [accounts] = await ethereum.request({
-          method: 'eth_requestAccounts',
-        });
-        const networkId = await ethereum.request({
-          method: 'net_version',
-        });
-        if (networkId == CONFIG_staking.NETWORK.ID) {
-          return accounts;
+    try {
+      const networkId = await web3.eth.getChainId();
+      const [accounts] = await web3.eth.getAccounts();
+      if (networkId == CONFIG_staking.NETWORK.ID) {
+        return accounts;
 
-          // Add listeners end
-        } else {
-          throw 'netErr';
-        }
-      } catch (err) {
-        if (err === 'netErr')
-          throw `Change network to ${CONFIG_staking.NETWORK.NAME}.`;
-        else throw new Error('Something went wrong.');
+        // Add listeners end
+      } else {
+        throw 'netErr';
       }
+    } catch (err) {
+      if (err === 'netErr')
+        throw `Change network to ${CONFIG_staking.NETWORK.NAME}.`;
+      else throw new Error('Something went wrong.');
+      // dispatch(connectFailed('Something went wrong.'));
     }
   },
   getTVL: async contract => {
@@ -105,7 +122,6 @@ const Repository = {
   },
   getAllowance: async ({ contract, stakingAddress, account }) => {
     try {
-      console.log('111');
       const res = await contract.allowance(account, stakingAddress).call();
       return res;
     } catch (err) {
@@ -131,15 +147,17 @@ const Repository = {
   getAccountTier: async ({ contract, account }) => {
     try {
       const res = await contract.AccountTier(account).call();
-      if (res===2) {
+      if (res == 2) {
         return 'Silver';
-      } else if (res===3){
-        return 'Gold'
-      } else if (res===4){
-        return 'Platinum'
-      } else if (res===5){
-        return 'Diamond'
-      } else { return 'None'}
+      } else if (res == 3) {
+        return 'Gold';
+      } else if (res == 4) {
+        return 'Platinum';
+      } else if (res == 5) {
+        return 'Diamond';
+      } else {
+        return 'None';
+      }
     } catch (err) {
       throw new Error('Failed Getting Accounnt Tier !');
     }
@@ -195,13 +213,12 @@ const Repository = {
     }
   },
   stakeSBP: async ({ contract, amount, storageId, account }) => {
-      var amounts = web3.utils.toWei(''+amount,'ether');
-      const res = await contract.StakeSBP(amounts, storageId).send({
-        from: account,
-      });
-      // console.log('res', res);
-      return res;
-
+    var amounts = web3.utils.toWei(''+amount, 'ether');
+    const res = await contract.StakeSBP(amounts, storageId).send({
+      from: account,
+    });
+    // console.log('res', res);
+    return res;
   },
   unStake: async ({ contract, stakedId, account }) => {
     try {

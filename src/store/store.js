@@ -42,7 +42,10 @@ const Store = observable({
         if (res) {
           this.account = res;
           this.fetchAccountInfo();
+        } else {
+          throw 'Failed Connect Wallet';
         }
+        console.log('res!!', res);
       });
       return { result: true, msg: 'Succeed Connect Wallet' };
     } catch (err) {
@@ -212,7 +215,7 @@ const Store = observable({
     } catch (err) {}
   },
   async getStakedPool(stakeId) {
-    //staking stakeid로 pool 
+    //staking stakeid로 pool
     try {
       const res = await Repository.getStakedPool({
         contract: this.stakingContract.methods,
@@ -225,14 +228,13 @@ const Store = observable({
     }
   },
   async stakeSBP({ amount, storageId }) {
-      await Repository.stakeSBP({
-        contract: this.stakingContract.methods,
-        amount: amount,
-        storageId: storageId,
-        account: this.account,
-      });
-      return { result: true, msg: 'Succeed Staking SBP' };
-
+    await Repository.stakeSBP({
+      contract: this.stakingContract.methods,
+      amount: amount,
+      storageId: storageId,
+      account: this.account,
+    });
+    return { result: true, msg: 'Succeed Staking SBP' };
   },
   async unStakeSBP(stakedId) {
     try {
