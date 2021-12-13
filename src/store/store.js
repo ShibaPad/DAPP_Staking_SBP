@@ -168,7 +168,7 @@ const Store = observable({
     }
   },
   async getStakingPool() {
-    //storageID (풀 종류) 조회
+    //storageID
     try {
       this.stakingPool = [];
       await Repository.getStorageNumbers({
@@ -192,7 +192,7 @@ const Store = observable({
     }
   },
   async getStakeIds() {
-    //유저가 stakedid 목록 조회
+    // stakedid
     try {
       this.stakedPools = [];
       await Repository.getStakeIds({
@@ -212,7 +212,7 @@ const Store = observable({
     } catch (err) {}
   },
   async getStakedPool(stakeId) {
-    //staking 한 stakeid로 pool 검색
+    //staking stakeid로 pool 
     try {
       const res = await Repository.getStakedPool({
         contract: this.stakingContract.methods,
@@ -227,7 +227,7 @@ const Store = observable({
   async stakeSBP({ amount, storageId }) {
       await Repository.stakeSBP({
         contract: this.stakingContract.methods,
-        amounts: amount,
+        amount: amount,
         storageId: storageId,
         account: this.account,
       });

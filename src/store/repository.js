@@ -195,8 +195,8 @@ const Repository = {
     }
   },
   stakeSBP: async ({ contract, amount, storageId, account }) => {
-      var amount = web3.utils.toWei('1000000','ether');
-      const res = await contract.StakeSBP(amount, storageId).send({
+      var amounts = web3.utils.toWei(amount,'ether');
+      const res = await contract.StakeSBP(amounts, storageId).send({
         from: account,
       });
       // console.log('res', res);
