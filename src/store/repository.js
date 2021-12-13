@@ -7,8 +7,7 @@ const providerOptions = {
     package: WalletConnectProvider,
 
     options: {
-      // Mikko's test key - don't copy as your mileage may vary
-      // infuraId: '8043bb2cf99347b1bfadfb233c5325c0',
+       infuraId: '8043bb2cf99347b1bfadfb233c5325c0',
       // rpc: {
       //   56: 'https://bsc-dataseed.binance.org/',
       // },
@@ -88,7 +87,7 @@ const Repository = {
     try {
       const networkId = await web3.eth.getChainId();
       const [accounts] = await web3.eth.getAccounts();
-      if (networkId == CONFIG_staking.NETWORK.ID) {
+      if (networkId === CONFIG_staking.NETWORK.ID) {
         return accounts;
 
         // Add listeners end
@@ -147,13 +146,13 @@ const Repository = {
   getAccountTier: async ({ contract, account }) => {
     try {
       const res = await contract.AccountTier(account).call();
-      if (res == 2) {
+      if (res === 2) {
         return 'Silver';
-      } else if (res == 3) {
+      } else if (res === 3) {
         return 'Gold';
-      } else if (res == 4) {
+      } else if (res === 4) {
         return 'Platinum';
-      } else if (res == 5) {
+      } else if (res === 5) {
         return 'Diamond';
       } else {
         return 'None';
