@@ -14,7 +14,6 @@ const StakingBox = () => {
   const alert = useAlert();
   const [stakingInfo, setStakingInfo] = useState({});
   const [stakingAmount, setStakingAmount] = useState('');
-  const [SA, setSA] = useState('');
   const [disable, setDisable] = useState(true);
   
   useEffect(() => {
@@ -34,7 +33,6 @@ const StakingBox = () => {
     Store.stakingInfo.allowance,
     stakingAmount,
     stakingInfo,
-    SA,
   ]);
 
   const handleSelect = info => setStakingInfo(info);
@@ -42,9 +40,7 @@ const StakingBox = () => {
   const handleAmount = e => {
     const { value } = e.target;
     if (value && value > 0) setStakingAmount(value);
-    if (value && value > 0) setSA(value*10**18);
     if (!value) setStakingAmount('');
-    if (!value) setSA('');
   };
 
   const handleStake = async () => {
@@ -57,7 +53,7 @@ const StakingBox = () => {
           Number(stakingAmount*10**18) <= Number(Store.stakingInfo.SBPBalance)
         ) {
           await Store.stakeSBP({
-            amount: SA,
+            amount: stakingAmount,
             storageId: stakingInfo.storageId,
           }).then(res => {
             if (res) console.log('box', res);

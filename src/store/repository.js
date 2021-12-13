@@ -131,13 +131,13 @@ const Repository = {
   getAccountTier: async ({ contract, account }) => {
     try {
       const res = await contract.AccountTier(account).call();
-      if (res==2) {
+      if (res===2) {
         return 'Silver';
-      } else if (res==3){
+      } else if (res===3){
         return 'Gold'
-      } else if (res==4){
+      } else if (res===4){
         return 'Platinum'
-      } else if (res==5){
+      } else if (res===5){
         return 'Diamond'
       } else { return 'None'}
     } catch (err) {
@@ -195,7 +195,7 @@ const Repository = {
     }
   },
   stakeSBP: async ({ contract, amount, storageId, account }) => {
-      var amounts = web3.utils.toWei(amount,'ether');
+      var amounts = web3.utils.toWei(''+amount,'ether');
       const res = await contract.StakeSBP(amounts, storageId).send({
         from: account,
       });
